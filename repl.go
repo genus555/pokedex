@@ -1,5 +1,8 @@
 package main
-import "strings"
+import (
+	"strings"
+	"fmt"
+)
 
 func CleanInput(input string) []string {
 	lowerInput := strings.ToLower(input)
@@ -11,4 +14,18 @@ func CleanInput(input string) []string {
 		}
 	}
 	return inputList
+}
+
+func CommandExit() error {
+	fmt.Println("Closing the Pokedex... Goodbye!")
+	return nil
+}
+
+func CommandHelp() error {
+	fmt.Println("Welcome to the Pokedex!")
+	fmt.Println("Usage:\n")
+	for _, cmd := range commandRegistry {
+		fmt.Printf("%s: %s\n", cmd.name, cmd.description)
+	}
+	return nil
 }
