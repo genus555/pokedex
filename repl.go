@@ -16,12 +16,12 @@ func CleanInput(input string) []string {
 	return inputList
 }
 
-func CommandExit() error {
+func CommandExit(c *Config) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	return nil
 }
 
-func CommandHelp() error {
+func CommandHelp(c *Config) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:\n")
 	for _, cmd := range commandRegistry {
