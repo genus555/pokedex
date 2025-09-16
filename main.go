@@ -1,14 +1,16 @@
 package main
 import (
+	"github.com/genus555/pokedex/internal/pokecache"
 	"bufio"
 	"os"
 	"fmt"
+	"time"
 )
 
 type cliCommand struct {
 	name		string
 	description	string
-	callback	func(*Config) error
+	callback	func(*Config, *pokecache.Cache) error
 }
 
 type Config struct {
@@ -52,6 +54,8 @@ func init() {
 }
 
 func main() {
+	currentCache := pokecache.NewCache(5 *time.Second)
+	currentCache.Add("test", nil)
 	scanner := bufio.NewScanner(os.Stdin)
 	
 	running := true
@@ -64,7 +68,7 @@ func main() {
 			cmd, ok := commandRegistry[inp]
 			if !ok {
 				fmt.Println("Unknown command")
-			} else if err := cmd.callback(&currentPage); err != nil {
+			} else if err := cmd.callback(&currentPage, currentCache); err != nil {
 				fmt.Println(err)
 			}
 			if inp == "exit" {

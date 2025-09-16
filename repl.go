@@ -1,5 +1,6 @@
 package main
 import (
+	"github.com/genus555/pokedex/internal/pokecache"
 	"strings"
 	"fmt"
 )
@@ -16,14 +17,14 @@ func CleanInput(input string) []string {
 	return inputList
 }
 
-func CommandExit(c *Config) error {
+func CommandExit(c *Config, cache *pokecache.Cache) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	return nil
 }
 
-func CommandHelp(c *Config) error {
+func CommandHelp(c *Config, cache *pokecache.Cache) error {
 	fmt.Println("Welcome to the Pokedex!")
-	fmt.Println("Usage:\n")
+	fmt.Println("Usage:")
 	for _, cmd := range commandRegistry {
 		fmt.Printf("%s: %s\n", cmd.name, cmd.description)
 	}
