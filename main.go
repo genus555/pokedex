@@ -10,7 +10,7 @@ import (
 type cliCommand struct {
 	name		string
 	description	string
-	callback	func(*Config, *pokecache.Cache, []string) error
+	callback	func(*Config, *pokecache.Cache, []string, map[string]Pokemon) error
 }
 
 type Config struct {
@@ -21,6 +21,7 @@ type Config struct {
 
 var currentPage Config
 var commandRegistry map[string]cliCommand
+var UserPokedex map[string]Pokemon
 
 func init() {
 	commandRegistry = map[string]cliCommand{
@@ -49,6 +50,31 @@ func init() {
 			description:	"Add name of location as an arguement (explore city_A) to check area for pokemon",
 			callback:		ExploreLocation,
 		},
+		"catch": {
+			name:			"catch",
+			description:	"Add name of pokemon as an argument (catch pikachu) to attempt to catch the pokemon (pokemon catch rate based on base experience)",
+			callback:		AttemptCapture,
+		},
+		"locate": {
+			name:			"locate",
+			description:	"Display list of locations the pokemon appears",
+			callback:		LocatePokemon,
+		},
+		"inspect": {
+			name:			"inspect",
+			description:	"Gives stats and types of pokemon in possession",
+			callback:		InspectPokemon,
+		},
+		"release": {
+			name:			"release",
+			description:	"Deletes data on pokemon from pokedex",
+			callback:		ReleasePokemon,
+		},
+		"pokedex": {
+			name:			"pokedex",
+			description:	"List of pokemon user has caught",
+			callback:		GetPokedex,
+		},
 	}
 	nextURL := "https://pokeapi.co/api/v2/location-area"
 	currentPage = Config {
@@ -56,6 +82,7 @@ func init() {
 		previous:	nil,
 		pageNum:	0,
 	}
+	UserPokedex = make(map[string]Pokemon)
 }
 
 func main() {
@@ -72,7 +99,7 @@ func main() {
 		cmd, ok := commandRegistry[inputList[0]]
 		if !ok {
 			fmt.Println("Unknown command")
-		} else if err := cmd.callback(&currentPage, currentCache, inputList); err != nil {
+		} else if err := cmd.callback(&currentPage, currentCache, inputList, UserPokedex); err != nil {
 			fmt.Println(err)
 		}
 		if inputList[0] == "exit" {
