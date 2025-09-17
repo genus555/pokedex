@@ -17,16 +17,17 @@ func CleanInput(input string) []string {
 	return inputList
 }
 
-func CommandExit(c *Config, cache *pokecache.Cache) error {
+func CommandExit(c *Config, cache *pokecache.Cache, inputs []string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	return nil
 }
 
-func CommandHelp(c *Config, cache *pokecache.Cache) error {
+func CommandHelp(c *Config, cache *pokecache.Cache, inputs []string) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
 	for _, cmd := range commandRegistry {
 		fmt.Printf("%s: %s\n", cmd.name, cmd.description)
 	}
+	fmt.Println("\nWill read first command. For example:\n\"asd exit\" will not work but \"exit asd\" will exit.")
 	return nil
 }
